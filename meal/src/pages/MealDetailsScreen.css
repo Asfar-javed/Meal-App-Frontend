@@ -1,0 +1,46 @@
+.meal-details {
+    padding: 16px;
+  }
+  
+  .meal-appbar {
+    background-color: #214199a0;
+    padding: 12px 0;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+  }
+  
+  .meal-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  
+  .section-title {
+    color: #ffffff;
+    font-weight: bold;
+    margin: 16px 0 8px;
+    font-size: 2rem;
+    text-align: center;
+  }
+  
+  .meal-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 24px;
+    
+  }
+  
+  .meal-item, .meal-step {
+    text-align: center;
+    color: #938e8e;
+    font-size: 1rem;
+    margin: 6px 0;
+  }
+  
+  .meal-step {
+    padding: 8px 12px;
+  }
+  

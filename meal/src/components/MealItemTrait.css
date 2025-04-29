@@ -1,0 +1,16 @@
+.trait {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .trait .icon {
+    font-size: 17px;
+    color: white;
+  }
+  
+  .trait .label {
+    color: white;
+    font-size: 14px;
+  }
+  

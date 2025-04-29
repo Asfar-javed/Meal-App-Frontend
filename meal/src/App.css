@@ -1,0 +1,12 @@
+:root {
+  --primary-color: rgb(131, 57, 0);
+  --text-color: white;
+  --background-color: #121212;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Lato', sans-serif;
+}
+

@@ -1,0 +1,44 @@
+.meals-screen {
+    background-color: #121212;
+    color: white;
+    min-height: 100vh;
+    font-family: 'Lato', sans-serif;
+  }
+  
+  .meals-app-bar {
+    background-color: #1f1f1f;
+    padding: 16px;
+    border-bottom: 1px solid #333;
+    text-align: center;
+  }
+  
+  .meals-body {
+    padding: 16px;
+  }
+  
+  .meals-center {
+    text-align: center;
+    margin-top: 20vh;
+  }
+  
+  .meals-heading {
+    font-size: 2rem;
+    margin-bottom: 16px;
+    color: white;
+  }
+  
+  .meals-text {
+    font-size: 1rem;
+    color: #bbb;
+  }
+  
+  .meals-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .meals-list-item {
+    padding: 12px;
+    border-bottom: 1px solid #333;
+  }
+  
