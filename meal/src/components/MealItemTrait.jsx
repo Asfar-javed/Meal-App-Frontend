@@ -6,7 +6,7 @@ const MealItemTrait = ({ icon: Icon, label }) => {
   return (
     <div className="trait">
       <Icon className="icon" />
-      <span className="label">{label}</span>
+      {/* <span className="label">{label}</span> */}
     </div>
   );
 };

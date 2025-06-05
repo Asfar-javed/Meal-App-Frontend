@@ -24,8 +24,8 @@ export default function MealsScreen() {
     content = (
       <ul className="meals-list">
         {meals.map((meal) => (
-          <li key={meal.id} className="meals-list-item">
-            <MealItem key={meal.id} meal={meal} />
+          <li key={meal.createdAt} className="meals-list-item">
+            <MealItem key={meal.createdAt} meal={meal} />
           </li>
         ))}
       </ul>

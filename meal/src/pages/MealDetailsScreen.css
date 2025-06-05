@@ -44,3 +44,24 @@
     padding: 8px 12px;
   }
   
+  .meal-appbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favorite-btn:focus {
+  outline: none;
+}
+

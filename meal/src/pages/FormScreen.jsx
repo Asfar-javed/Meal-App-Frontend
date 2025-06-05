@@ -1,28 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { availableCategories, dummyMeals } from '../data/dummy-data';
-import Category from '../models/Category';
 import './FormScreen.css';
 
-const randomColors = [
-  "#FF5722", "#9C27B0", "#3F51B5", "#009688", "#FFC107",
-  "#795548", "#FF9800", "#8BC34A", "#673AB7", "#03A9F4",
+// Predefined categories matching your database schema
+const predefinedCategories = [
+  'Italian', 
+  'Quick & Easy', 
+  'Hamburgers', 
+  'German', 
+  'Light & Lovely', 
+  'Exotic', 
+  'Breakfast', 
+  'Asian', 
+  'French', 
+  'Summer'
 ];
 
 export default function FormScreen() {
   const navigate = useNavigate();
-  
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     title: '',
-    categoryId: '',
+    category: '', 
     duration: '',
     imageUrl: '',
     ingredients: '',
     steps: '',
   });
-
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,60 +37,84 @@ export default function FormScreen() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.title.trim() || !formData.imageUrl.trim()) {
-      alert('Please fill out all required fields!');
+    if (!formData.title.trim() || !formData.category || !formData.imageUrl.trim() || !formData.duration || !formData.ingredients.trim() || !formData.steps.trim()) {
+      alert('Please fill out all required fields (Title, Category, Duration, Image URL, Ingredients, and Steps)!');
       return;
     }
 
-    let categoryIdToUse = false;
-    
-    let newCategory = null;
+    setIsLoading(true);
 
-    if (!categoryIdToUse) {
-      const lastCategory = availableCategories[availableCategories.length - 1];
-      const lastIdNumber = parseInt(lastCategory.id.replace('c', ''));
-      const newIdNumber = lastIdNumber + 1;
-      const newCategoryId = `c${newIdNumber}`;
+    try {
+      // Prepare data for backend (matching your schema)
+      const mealData = {
+        title: formData.title.trim(),
+        category: formData.category, // This will be one of the enum values
+        duration: parseInt(formData.duration),
+        imageUrl: formData.imageUrl.trim(), // Your backend maps this to 'image'
+        ingredients: formData.ingredients ? formData.ingredients.split(',').map(ing => ing.trim()).filter(ing => ing) : [],
+        steps: formData.steps ? formData.steps.split(',').map(step => step.trim()).filter(step => step) : [],
+      };
 
-      newCategory = new Category(newCategoryId, formData.title.trim(), randomColors[Math.floor(Math.random() * randomColors.length)]);
-      availableCategories.push(newCategory);
-      console.log(availableCategories);
-      categoryIdToUse = newCategoryId;
-      console.log(newCategory);
+      // Make actual API call to your backend
+      console.log('Meal data to be saved:', mealData);
+      
+      const response = await fetch('http://localhost:8000/api/meals', { // Updated to port 8000
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(mealData),
+      });
+
+      console.log('Response status:', response.status);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        
+        let errorMessage = 'Failed to save meal';
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.message || errorMessage;
+        } catch (e) {
+          errorMessage = errorText || errorMessage;
+        }
+        
+        throw new Error(errorMessage);
+      }
+
+      const responseData = await response.json();
+      console.log('Response from server:', responseData);
+      
+      // Your backend returns { success: true, data: meal }
+      const savedMeal = responseData.data;
+      console.log('Meal saved successfully to database:', savedMeal);
+
+      // Show success alert
+      alert('Meal added successfully! 🎉');
+
+      // Reset form
+      setFormData({
+        title: '',
+        category: '',
+        duration: '',
+        imageUrl: '',
+        ingredients: '',
+        steps: '',
+      });
+
+      // Navigate back or to meals list
+      navigate('/', { state: { newMeal: savedMeal } });
+
+    } catch (error) {
+      console.error('Error saving meal:', error);
+      alert(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
     }
-
-    const newMeal = {
-      id: `m${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      categories: [categoryIdToUse],
-      title: formData.title.trim(),
-      affordability: 'affordable',
-      complexity: 'simple',
-      imageUrl: formData.imageUrl.trim(),
-      duration: +formData.duration,
-      ingredients: formData.ingredients.split(',').map(ing => ing.trim()),
-      steps: formData.steps.split(',').map(step => step.trim()),
-      isGlutenFree: false,
-      isVegan: false,
-      isVegetarian: false,
-      isLactoseFree: false,
-    };
-    console.log(newMeal);
-    
-    dummyMeals.push(newMeal);
-
-    setFormData({
-      title: '',
-      categoryId: '',
-      duration: '',
-      imageUrl: '',
-      ingredients: '',
-      steps: '',
-    });
-
-    navigate('/', { state: newCategory  });
   };
 
   const handleCancel = () => {
@@ -99,21 +128,28 @@ export default function FormScreen() {
       </div>
 
       <form className="form-container" onSubmit={handleSubmit}>
-        <h2>Add New Category + Meal</h2>
+        <h2>Add New Meal</h2>
 
         <input
           type="text"
           name="title"
-          placeholder="Title *"
+          placeholder="Meal Title *"
           value={formData.title}
           onChange={handleChange}
           required
+          disabled={isLoading}
         />
 
-        <select name="categoryId" value={formData.categoryId} onChange={handleChange}>
-          <option value="">Or Select Existing Category</option>
-          {availableCategories.map((cat) => (
-            <option key={cat.id} value={cat.id}>{cat.title}</option>
+        <select 
+          name="category" 
+          value={formData.category} 
+          onChange={handleChange}
+          required
+          disabled={isLoading}
+        >
+          <option value="">Select Category *</option>
+          {predefinedCategories.map((category) => (
+            <option key={category} value={category}>{category}</option>
           ))}
         </select>
 
@@ -123,37 +159,48 @@ export default function FormScreen() {
           placeholder="Duration (minutes) *"
           value={formData.duration}
           onChange={handleChange}
+          min="1"
           required
+          disabled={isLoading}
         />
 
         <input
-          type="text"
+          type="url"
           name="imageUrl"
           placeholder="Image URL *"
           value={formData.imageUrl}
           onChange={handleChange}
           required
+          disabled={isLoading}
         />
 
         <textarea
           name="ingredients"
-          placeholder="Ingredients (comma-separated)"
+          placeholder="Ingredients (comma-separated) *"
           value={formData.ingredients}
           onChange={handleChange}
           rows={3}
+          disabled={isLoading}
+          required
         />
 
         <textarea
           name="steps"
-          placeholder="Steps (comma-separated)"
+          placeholder="Cooking Steps (comma-separated) *"
           value={formData.steps}
           onChange={handleChange}
           rows={3}
+          disabled={isLoading}
+          required
         />
 
         <div className="form-buttons">
-          <button type="submit">Submit</button>
-          <button type="button" onClick={handleCancel}>Cancel</button>
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Saving...' : 'Submit'}
+          </button>
+          <button type="button" onClick={handleCancel} disabled={isLoading}>
+            Cancel
+          </button>
         </div>
       </form>
     </div>

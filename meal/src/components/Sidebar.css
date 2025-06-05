@@ -22,10 +22,11 @@
     left: -300px;
     height: 100%;
     width: 300px;
-    background: white;
+    background: rgb(69, 45, 2);
     transition: left 0.3s ease;
     display: flex;
     flex-direction: column;
+     box-shadow: 6px 0 10px rgba(164, 148, 3, 0.716);
   }
   
   .sidebar.open {
