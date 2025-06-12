@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from 'react-router-dom';
-import { availableCategories } from "../data/dummy-data";
 import CategoryGridItem from "../components/CategoryGridItem";
 import Hamburger from "../components/Hamburger";
 import Sidebar from "../components/Sidebar";
@@ -11,7 +10,7 @@ export default function CategoriesScreen() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [categories, setCategories] = useState(availableCategories);
+  const [categories, setCategories] = useState([]);
   const [meals, setMeals] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -24,6 +23,14 @@ export default function CategoriesScreen() {
       if (result.success) {
         console.log("Fetched meals:", result.data);
         setMeals(result.data);
+
+        const uniqueCategories = Array.from(
+          new Set(result.data.map(meal => meal.category))
+        ).map(title => ({ title, id: title })); // use title as id if not available
+        setCategories(uniqueCategories);
+
+        console.log("Fetched meals:", result.data);
+        console.log("Derived categories:", uniqueCategories);
       } else {
         console.error("Failed to fetch meals:", result.message);
       }
@@ -35,17 +42,6 @@ export default function CategoriesScreen() {
   fetchMeals();
 }, []);
 
-
-  // Add newly created category if passed through route state
-  useEffect(() => {
-    if (location.state?.newCategory) {
-      const newCategory = location.state.newCategory;
-      setCategories(prev => {
-        if (prev.some(cat => cat.id === newCategory.id)) return prev;
-        return [...prev, newCategory];
-      });
-    }
-  }, [location.state]);
 
   const selectCategoryHandler = (category) => {
     const filteredMeals = meals.filter(meal => meal.category === category.title); // Match by category name
@@ -72,10 +68,10 @@ export default function CategoriesScreen() {
       alert(data.message);
 
       // Remove meals from that category in UI state
-      setMeals(prev => prev.filter(meal => meal.category !== categoryTitle));
-
-      // Optional: if categories are dynamic and depend on meals, update them too
+      setMeals(prev => prev.filter(meal => meal.title !== categoryTitle));
       setCategories(prev => prev.filter(cat => cat.title !== categoryTitle));
+
+      
     } else {
       alert(data.message);
     }
@@ -113,7 +109,7 @@ export default function CategoriesScreen() {
       </header>
 
       <div className="grid">
-        {meals.map(category => (
+        {categories.map(category => (
           <CategoryGridItem
             key={category.id}
             category={category}

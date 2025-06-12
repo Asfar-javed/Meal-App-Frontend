@@ -1,0 +1,60 @@
+.favorite-screen {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.meals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.meal-card {
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.meal-card:hover {
+  transform: translateY(-5px);
+}
+
+.meal-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.meal-info {
+  padding: 1rem;
+}
+
+.meal-title {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.meal-category {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.loading,
+.no-favorites {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-top: 3rem;
+  color: #666;
+}

@@ -6,6 +6,7 @@ import MealsScreen from './pages/MealsScreen';
 import MealDetailsScreen from './pages/MealDetailsScreen';
 import ChatScreen from './pages/ChatScreen';
 import FormScreen from './pages/FormScreen';
+import FavoritesScreen from './pages/FavoriteScreen';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -18,6 +19,8 @@ const App = () => {
         <Route path="/meal/:id" element={<MealDetailsScreen />} />
         <Route path="/chat" element={<ChatScreen />} />
         <Route path="/form" element={<FormScreen />} />
+        <Route path="/favorites" element={<FavoritesScreen />} />
+        
       </Routes>
     </Router>
     <ToastContainer />
