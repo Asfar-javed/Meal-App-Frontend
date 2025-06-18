@@ -1,6 +1,8 @@
 // App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
 import CategoriesScreen from './pages/CategoriesScreen';
 import MealsScreen from './pages/MealsScreen';
 import MealDetailsScreen from './pages/MealDetailsScreen';
@@ -14,7 +16,15 @@ const App = () => {
   return (<>
   <Router>  
       <Routes>
-        <Route path="/" element={<CategoriesScreen />} />
+        {/* Initial screen: Login */}
+        <Route path="/" element={<Login />} />
+        
+        {/* Auth Screens */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+
+        {/* Main Screens */}
+        <Route path="/categories" element={<CategoriesScreen />} />
         <Route path="/meals" element={<MealsScreen />} />
         <Route path="/meal/:id" element={<MealDetailsScreen />} />
         <Route path="/chat" element={<ChatScreen />} />
