@@ -1,15 +1,22 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { FaTimes, FaUtensils } from "react-icons/fa";
 import "./Sidebar.css";
 
 export default function Sidebar({ isOpen, onClose }) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleNavigate = (path) => {
     navigate(path);
-    onClose(); // Close sidebar after navigation
+    onClose();
   };
+
+  const navItems = [
+    { label: "Meals", path: "/meals" },
+    { label: "Filters", path: "/filters" },
+    { label: "Favorites", path: "/favorites" }
+  ];
 
   return (
     <div className={`sidebar-overlay ${isOpen ? "open" : ""}`} onClick={onClose}>
@@ -17,19 +24,23 @@ export default function Sidebar({ isOpen, onClose }) {
         className={`sidebar ${isOpen ? "open" : ""}`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top 20% block */}
         <div className="sidebar-header">
           <FaUtensils className="sidebar-icon" />
           <h2>Cooking Up!</h2>
           <FaTimes className="close-btn" onClick={onClose} />
         </div>
 
-        {/* Remaining content */}
         <div className="sidebar-content">
           <ul>
-            <li onClick={() => handleNavigate("/meals")}>Meals</li>
-            <li onClick={() => handleNavigate("/filters")}>Filters</li>
-            <li onClick={() => handleNavigate("/favorites")}>Favorites</li>
+            {navItems.map((item) => (
+              <li
+                key={item.path}
+                className={location.pathname === item.path ? "active" : ""}
+                onClick={() => handleNavigate(item.path)}
+              >
+                {item.label}
+              </li>
+            ))}
           </ul>
         </div>
       </div>
